@@ -1,12 +1,10 @@
 ## Librairies
 
-from fonctions_ACP import *
+# from fonctions_ACP import *
 import nltk
-from nltk.probability import FreqDist
-from fonctions import *
+# from nltk.probability import FreqDist
+# from fonctions import *
 import pickle
-
-
 
 ## Liste des fonctions Bidouilles
 # Toutes les fonctions sont construites de la même manière : elle prennnent en argument un auteur [type(auteur) = str] et un indice [type(indice) = int], et renvoie un vecteur de fréquence. Chaque fonction charge elle-même les fichiers dont elle aura besoin.
@@ -66,7 +64,7 @@ def vecteur_frequence_premiere_lettre_minuscule(texte):
     nb_mots = len(mots_texte)
     for mot in mots_texte:
         if mot[0] in alphabet:
-            X[liste_mots.index(mot[0])] += 1
+            X[alphabet.index(mot[0])] += 1
     X = [f/nb_mots for f in X]
     return X;
 
@@ -82,7 +80,7 @@ def vecteur_frequence_premiere_lettre_majuscule(texte):
     nb_mots = len(mots_texte)
     for mot in mots_texte:
         if mot[0] in alphabet:
-            X[liste_mots.index(mot[0])] += 1
+            X[alphabet.index(mot[0])] += 1
     X = [f/nb_mots for f in X]
     return X;
     
@@ -130,7 +128,7 @@ def vecteur_frequence_longueur_mots(texte):
     nb_mots = len(mots_texte)
     # Remplissage
     for mot in mots_texte:
-        if len(mot) < longueurs
+        if len(mot) < longueurs:
             X[len(mot)] += 1
     X = [f/nb_mots for f in X]
     return X;
@@ -141,8 +139,8 @@ def vecteur_frequence_longueur_mots(texte):
 # Fonction auxiliaire
 def estBigramme(indice, texte, bigrammes):
     retour = -1
-    for b in bigrammes:
-        if b == texte[indice: indice+2]:
+    for j in range(len(bigrammes)):
+        if bigrammes[j] == texte[indice: indice+2]:
             retour = j
     return retour;
 
@@ -157,7 +155,7 @@ def vecteur_frequence_bigrammes(texte):
     nb_lettres = len(texte)
     # Parcours du texte à la recherche de bigrams
     for indice_lettre in range(nb_lettres -1):
-        estbig = estBigramme(indice, texte, bigrammes)
+        estbig = estBigramme(indice_lettre, texte, bigrammes)
         if (estbig != -1):
             X[estbig] += 1
     X = [f/nb_lettres for f in X]
@@ -187,6 +185,7 @@ def vecteur_frequence_longueur_mots(texte):
     nb_phrases = len(phrases)
     # Parcours des phrases
     for phrase in phrases:
+<<<<<<< HEAD
         mots_phrase = nltk.word_tokenize(phrase)
         taille = classification(mots_phrase)
 
@@ -277,4 +276,11 @@ def vecteur_frequence_bigrammes_fin(texte):
                 if (estbig!=-1):
                     X[numArt, estbig] += 1
     X = [i/len_texte for i in X]
+=======
+        listeMots = nltk.word_tokenize(phrase)
+        taille = classification(listeMots)
+        X[taille] += 1
+    nb_phrases= len(phrases)
+    X = [t/nb_phrases for t in X]
+>>>>>>> 2c27ca7a1a24d02af724814478eb9fa26d878c85
     return X;

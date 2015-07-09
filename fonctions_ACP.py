@@ -96,7 +96,15 @@ def ACP(X, n_components=None, kernel=kernel_eucl, centre = None, normalisee = Tr
 
 ## Fonction de dessin en 2D
 
+<<<<<<< HEAD
 couleurs=  
+=======
+# auteurs = ['dominicfifield','fiona-harvey','julianborger','kim-willsher','larryelliott']
+# nbArt = [852, 603, 506, 519, 535]
+
+def findCol(i, nbArt, couleurs):
+    return;
+>>>>>>> 2c27ca7a1a24d02af724814478eb9fa26d878c85
 
 def trace_ACP(X, titre = "", axes = None, numero = None):
     n = len(X)
