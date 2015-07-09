@@ -24,6 +24,8 @@ def genere_matrice_donnees(auteurs, vecteur_frequence):
 
 ## Liste des fonctions Bidouilles
 # Toutes les fonctions sont construites de la même manière : elle prennnent en argument un auteur [type(auteur) = str] et un indice [type(indice) = int], et renvoie un vecteur de fréquence. Chaque fonction charge elle-même les fichiers dont elle aura besoin.
+## Fréquence des signes de ponctuation 
+ponctuation = {',':0,'?':0,';':0,'.':0,':':0,'!':0,'...':0,'(':0,')':0,'-':0,'—':0,'–':0}
 
 ## Fréquence de mots
 
