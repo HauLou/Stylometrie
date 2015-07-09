@@ -93,7 +93,7 @@ def vecteur_frequence_premiere_lettre(chemin):
     mots_texte = nltk.word_tokenize(texte)
     nb_mots = len(mots_texte)
     for mot in mots_texte:
-        X[indice_lettre(mot[0])] += 1
+        X[indice_lettre(mot[0], alphabet)] += 1
     for i in range(taille_alphabet):
         X[i] /= nb_mots
     return X;

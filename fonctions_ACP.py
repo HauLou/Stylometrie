@@ -6,6 +6,7 @@ import numpy as np
 import copy
 import matplotlib.pyplot as plt
 import pickle
+import fonctions
 
 ## Code des fonctions utiles
 
@@ -100,7 +101,7 @@ def trace_ACP(X, titre = "", axes = None, numero = None):
     plt.figure(figsize=(8,8))
     for i in range(n):
         #if (findCol(i, nbArt, couleurs)!='g'):
-        plt.plot(X[i,0], X[i,1], '+', c='k')#findCol(i, nbArt, couleurs)) 
+        plt.plot(X[i,0], X[i,1], '+', c = findCol(i, nbArt, couleurs)) 
     plt.title(titre)
     if axes != None:
         plt.axis(axes)
@@ -137,3 +138,25 @@ trace_ACP(X_kpca)
 X_2 = ACP(G, n_components=3, normalisee = False, divise_lambda = True, precomputed = True)
 print("X_2", "\n", X_2)
 trace_ACP(X_2)
+
+## Centre de Test
+
+import pickle
+
+# Import fichiers
+nom_matrice = 'G_prod_scal_arbres.txt'
+chemin = './matrices/'+nom_matrice
+fichier = open(chemin, 'rb')
+G = pickle.load(fichier)
+fichier.close()
+
+# Traitement de la matrice
+X = ACP(G, precomputed = True)
+trace_ACP(X)
+
+
+
+
+
+
+
