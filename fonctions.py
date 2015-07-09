@@ -1,5 +1,6 @@
 from nltk.corpus import PlaintextCorpusReader # Pour la définition du corpus de textes
 import numpy as np
+import pickle
 
 ## Fonctions annexes
 
@@ -30,6 +31,17 @@ def secondParam(tab):
     retour = [t[1] for t in tab]
     return retour;
     
+def charge_texte(auteur,i):
+    f = open('./auteurs/'+auteur+'/'+str(i)+'.txt','r')
+    retour = f.read()
+    f.close()
+    return retour
+
+def charge_liste_natures(auteur,i):
+    f = open('./listes_natures/'+auteur+'/'+str(i)+'.txt','rb')
+    retour = pickle.load(f)
+    f.close()
+    return retour
 # listeMots = [',', '.', 'the', 'of', 'to', 'and', 'a', 'in', 'is', 'it', 'you', 'that', 'he', 'was', 'for', 'on', 'are', 'with', 'as', 'I', 'his', 'they', 'be', 'at', 'one', 'have', 'this'] # Liste de mots à changer eventuellement
 # auteurs = ['1','2','3']
 # nbArt = calcArt(auteurs) # tableau du nombre d'articles par auteur

@@ -98,7 +98,7 @@ def vecteur_frequence_lettres_minuscule(texte):
         if l in alphabet:
             X[alphabet.index(l)] += 1
     nb_lettres = sum(X)
-    X = [f/nb_mots for f in X]
+    X = [f/nb_lettres for f in X]
     return X;
 
 def vecteur_frequence_lettres_majuscule(texte):
@@ -113,7 +113,7 @@ def vecteur_frequence_lettres_majuscule(texte):
         if l in alphabet:
             X[alphabet.index(l)] += 1
     nb_lettres = sum(X)
-    X = [f/nb_mots for f in X]
+    X = [f/nb_lettres for f in X]
     return X;
     
 ## Fréquence longueur de mots

@@ -99,15 +99,22 @@ def ACP(X, n_components=None, kernel=kernel_eucl, centre = None, normalisee = Tr
 # auteurs = ['dominicfifield','fiona-harvey','julianborger','kim-willsher','larryelliott']
 # nbArt = [852, 603, 506, 519, 535]
 
-def findCol(i, nbArt, couleurs):
-    return;
+def couleur(i, nb_articles_par_auteur, couleurs):
+    ind = 0
+    nb_vus = nb_articles_par_auteur[0]
+    while nb_vus < i:
+        ind += 1
+        nb_vus += nb_articles_par_auteur[ind]
+        
+    return couleurs[ind];
 
-def trace_ACP(X, titre = "", axes = None, numero = None):
+def trace_ACP(X,nb_articles_par_auteur, titre = "", axes = None, numero = None):
+    couleurs = ['b','r','g','y','k','m']
     n = len(X)
     plt.figure(figsize=(8,8))
     for i in range(n):
         #if (findCol(i, nbArt, couleurs)!='g'):
-        plt.plot(X[i,0], X[i,1], '+', c = findCol(i, nbArt, couleurs)) 
+        plt.plot(X[i,0], X[i,1], '+', c = couleur(i, nb_articles_par_auteur, couleurs)) 
     plt.title(titre)
     if axes != None:
         plt.axis(axes)
@@ -122,45 +129,45 @@ def kernel(X, Y):
         retour += X[i]*X[i]*Y[i]*Y[i]
     return retour;
 
-X = [[2,4,5],[7,3,2],[1,3,2],[7,6,3],[0,4,2]]
-V = ACP(X, n_components=3, normalisee = False, divise_lambda = True, kernel = kernel)
-print("ACP", "\n", V)
-trace_ACP(V)
-
-from sklearn.decomposition import PCA
-n_components = 3 # Pour projeter en 2D
-pca = PCA(n_components=n_components)
-X_pca = pca.fit_transform(X)
-print("X_pca", "\n", X_pca)
-trace_ACP(X_pca)
-
-from sklearn.decomposition import KernelPCA
-G = gram(X)
-kACP = KernelPCA(n_components = 3, kernel = kernel)
-X_kpca = kACP.fit_transform(X)
-print("X_kpca", "\n", X_kpca)
-trace_ACP(X_kpca)
-
-X_2 = ACP(G, n_components=3, normalisee = False, divise_lambda = True, precomputed = True)
-print("X_2", "\n", X_2)
-trace_ACP(X_2)
+# X = [[2,4,5],[7,3,2],[1,3,2],[7,6,3],[0,4,2]]
+# V = ACP(X, n_components=3, normalisee = False, divise_lambda = True, kernel = kernel)
+# print("ACP", "\n", V)
+# trace_ACP(V)
+# 
+# from sklearn.decomposition import PCA
+# n_components = 3 # Pour projeter en 2D
+# pca = PCA(n_components=n_components)
+# X_pca = pca.fit_transform(X)
+# print("X_pca", "\n", X_pca)
+# trace_ACP(X_pca)
+# 
+# from sklearn.decomposition import KernelPCA
+# G = gram(X)
+# kACP = KernelPCA(n_components = 3, kernel = kernel)
+# X_kpca = kACP.fit_transform(X)
+# print("X_kpca", "\n", X_kpca)
+# trace_ACP(X_kpca)
+# 
+# X_2 = ACP(G, n_components=3, normalisee = False, divise_lambda = True, precomputed = True)
+# print("X_2", "\n", X_2)
+# trace_ACP(X_2)
 
 ## Centre de Test
 
-import pickle
-
-# Import fichiers
-nom_matrice = 'G_prod_scal_arbres.txt'
-chemin = './matrices/'+nom_matrice
-fichier = open(chemin, 'rb')
-G = pickle.load(fichier)
-fichier.close()
-
-# Traitement de la matrice
-X = ACP(G, precomputed = True)
-trace_ACP(X)
-
-
+# import pickle
+# 
+# # Import fichiers
+# nom_matrice = 'G_prod_scal_arbres.txt'
+# chemin = './matrices/'+nom_matrice
+# fichier = open(chemin, 'rb')
+# G = pickle.load(fichier)
+# fichier.close()
+# 
+# # Traitement de la matrice
+# X = ACP(G, precomputed = True)
+# trace_ACP(X)
+# 
+# 
 
 
 
