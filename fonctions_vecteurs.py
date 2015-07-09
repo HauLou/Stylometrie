@@ -27,11 +27,11 @@ def genere_matrice_donnees(auteurs, vecteur_frequence):
 
 ## Fréquence de mots
 
-def vecteur_frequence_mots(auteur, indice):
+def vecteur_frequence_mots(chemin):
     # Chargement du texte
-    chemin  = './articles/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     text = pickle.load(fichier)
+    fichier.close()
     # liste des mots utilisés. [pour l'instant : len(liste_mots) = 53 ]
     liste_mots=[',','.','the','be','to','of','and','a','in','that','have','I','it','for','not','on','with','he','as','you','do','at','this','but','his','by','from','they','we','say','her','she','or','an','will','my','one','all','would','there','their','what','so','up','out','if','about','who','get','which','go','me','when']
     # initialisation du vecteur que l'on va remplir et que l'on renverra
@@ -48,11 +48,11 @@ def vecteur_frequence_mots(auteur, indice):
     
 ## Fréquence de natures de mots
 
-def vecteur_frequence_nature(auteur, indice):
+def vecteur_frequence_nature(chemin):
     # Chargement du fichier
-    chemin = './articles_natures/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, 'rb')
     texte = pickle.load(fichier)
+    fichier.close()
     # liste des natures utilisées. [pour l'instant : len(liste_natures) = 53 ]
     liste_natures = ['LS', 'NN', 'VBZ', 'IN', 'DT', '.', 'WRB', 'NNS', 'NNP', 'JJ', 'JJR', 'VBP', 'MD', 'VB', 'PRP', 'VBD', 'VBN', ',', 'JJS', 'EX', 'CC', 'RB', 'TO', 'CD', 'VBG', ':', 'RP', 'WP', 'PRP$', '-NONE-', 'WDT', 'RBR', 'RBS', 'PDT', 'NNPS', '$', 'WP$', "''", 'POS', '``', '#', 'FW']
     # initialisation du vecteur que l'on va remplir et que l'on renverra
@@ -80,9 +80,8 @@ def indice_lettre(lettre, alphabet):
 
 # Fonction vecteur_frequence_premiere_lettre
 
-def vecteur_frequence_premiere_lettre(auteur, indice):
+def vecteur_frequence_premiere_lettre(chemin):
     # Chargement du fichier
-    chemin = './articles/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     texte = pickle.load(fichier)
     # liste des lettres utilisées
@@ -101,11 +100,11 @@ def vecteur_frequence_premiere_lettre(auteur, indice):
     
 ## Fréquence des lettres
 
-def vecteur_frequence_lettres(auteur, indice):
+def vecteur_frequence_lettres(chemin):
     # Chargement du fichier
-    chemin = './articles/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     texte = pickle.load(fichier)
+    fichier.close()
     # liste des lettres utilisées
     alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     taille_alphabet = len(alphabet) # [ici, taille_alphabet = 26] 
@@ -122,11 +121,11 @@ def vecteur_frequence_lettres(auteur, indice):
     
 ## Fréquence longueur de mots
     
-def vecteur_frequence_longueur_mots(auteur, indice):
+def vecteur_frequence_longueur_mots(chemin):
     # Chargement du fichier
-    chemin = './articles/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     texte = pickle.load(fichier)
+    fichier.close()
     # Choix de la taille du vecteur
     longueurs = 30 # [ici, taille_alphabet = 30] 
     # initialisation du vecteur que l'on renverra
@@ -155,11 +154,11 @@ def indice_lettre(lettre, alphabet):
 
 # Fonction vecteur_frequence_premiere_lettre
 
-def vecteur_frequence_derniere_lettre(auteur, indice):
+def vecteur_frequence_derniere_lettre(chemin):
     # Chargement du fichier
-    chemin = './articles/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     texte = pickle.load(fichier)
+    fichier.close()
     # liste des lettres utilisées
     alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     taille_alphabet = len(alphabet) # [ici, taille_alphabet = 26] 
@@ -185,11 +184,11 @@ def estBigram(indice, texte, bigrams):
     return retour;
 
 # Fonction vecteur_frequence_bigram à proprement parler
-def vecteur_frequence_bigram(auteur, indice):
+def vecteur_frequence_bigram(chemin):
     # Chargement du fichier
-    chemin = './articles/'+auteur+'/'+str(indice)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     texte = pickle.load(fichier)
+    fichier.close()
     # Liste des bigrams utilisés
     bigrams = ['th', 'he', 'in', 'en', 'nt', 're', 'er', 'an', 'ti', 'es', 'on', 'at', 'se', 'nd', 'or', 'ar', 'al', 'te', 'co', 'de', 'to', 'ra', 'et', 'ed', 'it', 'sa', 'em', 'ro']
     nb_bigrams = len(bigrams)
@@ -220,11 +219,11 @@ def classification(phrase):
     return retour;
 
 # Fonction de vecteur phrases à proprement parler
-def vecteur_frequence_longueur_mots(auteur, indice):
+def vecteur_frequence_longueur_mots(chemin):
     # Chargement fichier
-    chemin = './articles/'+str(auteur)+'/'+str(article)+'.txt'
     fichier = open(chemin, encoding = 'utf-8')
     texte = fichier.read()
+    fichier.close()
     # Définition du vecteur que l'on renverra
     nb_tailles = 25
     X = [0] * nb_tailles

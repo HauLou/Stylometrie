@@ -21,7 +21,7 @@ def gram(X, kernel=kernel_eucl):
     n = len(X)
     G = np.zeros((n, n), dtype = float)
     for i in range(n):
-        for j in range(n):
+        for j in range(i):
             G[i, j] = G[j, i] = kernel(X[i], X[j])
         G[i, i] = kernel(X[i], X[i])
     return G;
