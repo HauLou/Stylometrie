@@ -96,6 +96,8 @@ def ACP(X, n_components=None, kernel=kernel_eucl, centre = None, normalisee = Tr
 
 ## Fonction de dessin en 2D
 
+couleurs=  
+
 def trace_ACP(X, titre = "", axes = None, numero = None):
     n = len(X)
     plt.figure(figsize=(8,8))

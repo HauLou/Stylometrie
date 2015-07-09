@@ -100,7 +100,7 @@ def vecteur_frequence_lettres_minuscule(texte):
         if l in alphabet:
             X[alphabet.index(l)] += 1
     nb_lettres = sum(X)
-    X = [f/nb_mots for f in X]
+    X = [f/nb_lettres for f in X]
     return X;
 
 def vecteur_frequence_lettres_majuscule(texte):
@@ -115,7 +115,7 @@ def vecteur_frequence_lettres_majuscule(texte):
         if l in alphabet:
             X[alphabet.index(l)] += 1
     nb_lettres = sum(X)
-    X = [f/nb_mots for f in X]
+    X = [f/nb_lettres for f in X]
     return X;
     
 ## Fréquence longueur de mots
@@ -197,3 +197,84 @@ def vecteur_frequence_longueur_mots(texte):
             X[taille] += 1
         nb_phrases= len(phrases)
         X = [t/nb_phrases for t in X]
+
+## Fonction fréquence de trigrams
+
+def esttrigram(indice, texte, trigrams):
+    retour = -1
+    for j in range(len(trigrams)):
+        if (trigrams[j]==texte[indice: indice+3]):
+            retour = j
+    return retour;
+
+def frequence_trigrams(texte):
+    # Données sur le texte
+    longueur_texte = len(texte)
+    # Définition des trigrams les plus fréquents
+    trigrams = ['the', 'ing', 'and', 'her', 'ere', 'ent', 'tha', 'nth', 'was', 'eth', 'for', 'dth']
+    nb_trigrams = len(trigrams)
+    # Définition de la matrice que l'on renverra
+    X = [0]*nb_trigrams
+    # A la recherche des trigrammes -- Boucle sur les lettres
+    for indice_lettre in range(len(texte)-2):
+        est_trigram = esttrigram(indice_lettre, texte, trigrams)
+        if (est_trigram!= -1):
+            X[est_trigram] += 1
+    X = [i/longueur_texte for i in X]
+    return X;
+    
+## Fonction nombre de voyelles
+
+## Fonction auxiliaire
+
+alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+
+def isVoyelle(lettre):
+    voyelles = ['a','e','u', 'i', 'o', 'y']
+    retour = lettre in voyelles
+    return retour;
+
+## Génération de la Matrice
+
+def vecteur_frequence_voyelle(texte):
+    # Informations relatives au texte
+    len_texte = len(texte)
+    # Définition des voyelles
+    voyelles = ['a', 'e', 'i', 'o', 'u', 'y']
+    nb_voyelles = len(voyelles)
+    # Définition du vecteur que l'on rend
+    X = [0]* nb_voyelles
+    # A la recherche des voyelles -- boucle sur le texte
+    for lettre in texte:
+        if lettre in voyelles:
+            X[voyelles.index(lettre)] += 1
+    X = [i/len_texte for i in X]
+    return X;
+
+## Vecteur de fréquence des bigrammes de fin
+
+def estBigram(texte, bigrams):
+    retour = -1
+    for j in range(len(bigrams)):
+        if (bigrams[j]==texte[-2]+texte[-1]):
+            retour = j
+    return retour;
+
+# Fonction sur les bigrammes à la fin d'un mot à proprement parler
+def vecteur_frequence_bigrammes_fin(texte):
+    # Définition des données relatives au texte
+    len_texte = len(texte)
+    texte = nltk.word.tokenize(texte)
+    # Définition des bigrammes
+    bigrams = ['th', 'he', 'in', 'en', 'nt', 're', 'er', 'an', 'ti', 'es', 'on', 'at', 'se', 'nd', 'or', 'ar', 'al', 'te', 'co', 'de', 'to', 'ra', 'et', 'ed', 'it', 'sa', 'em', 'ro']
+    nb_bigrams = len(bigrams)
+    # Définition vecteur X de retour
+    X = [0]*nb_bigrams
+    # A la recherche de bigrammes à la fin des mots
+    for mot in texte:
+        if 2 < len(mot):
+            estbig = estBigram(mot, bigrams)
+                if (estbig!=-1):
+                    X[numArt, estbig] += 1
+    X = [i/len_texte for i in X]
+    return X;
