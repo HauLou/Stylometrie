@@ -3,6 +3,7 @@
 #from fonctions_auxiliaires import liste_dossiers
 import os
 import pickle
+import vecteur_depuis_texte as v_texte
 
 ## Variables Globales
 
@@ -60,14 +61,36 @@ def assemble_matrice(nb_articles_par_auteur, critere):
 
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = [100]*nb_auteurs, poids = None, tSNE = False, ACP = True, kmeans = False, critere = None):
+def fonction_principale(nb_articles_par_auteur = 100, poids = None, tSNE = False, ACP = True, kmeans = False, critere = accepte):
+    if type(nb_articles_par_auteur) == int:
+        nb_article_par_auteur = [nb_articles_par_auteur]*nb_auteur
     
-    X = assemble_matrice(nb_a
+    tailles_vecteurs = {}
+    X = []
     
-    if tSNe:
-        X_tsne = tSNE(X)
-    if ACP:
-        X_acp = ACP(X)
-    if kmeans:
-        X_kmeans = kmeans(X)
-    return;
+    for auteur in range(len(auteurs)):
+        i = 0
+        nb_articles_pris = 0
+        while nb_articles_pris < nb_articles_par_auteur[auteur]:
+            texte = charge_texte(auteurs[auteur],i)
+            if critere(texte):
+                ligne = []
+                for fonction in v_texte:
+                    if fonction[:8] == 'vecteur_':
+                        # On applique la fonction
+                        eval('v = '+fonction+'(texte)')
+                        tailles_vecteurs[fonction] = len(v)
+                        ligne += v
+                X.append(v)
+            i += 1
+    
+    
+    traceACP(X,nb_articles_par_auteur=nb_articles_par_auteur
+    
+    # if tSNe:
+    #     X_tsne = tSNE(X)
+    # if ACP:
+    #     X_acp = ACP(X)
+    # if kmeans:
+    #     X_kmeans = kmeans(X)
+    # return;

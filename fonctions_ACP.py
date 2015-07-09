@@ -96,6 +96,12 @@ def ACP(X, n_components=None, kernel=kernel_eucl, centre = None, normalisee = Tr
 
 ## Fonction de dessin en 2D
 
+# auteurs = ['dominicfifield','fiona-harvey','julianborger','kim-willsher','larryelliott']
+# nbArt = [852, 603, 506, 519, 535]
+
+def findCol(i, nbArt, couleurs):
+    return;
+
 def trace_ACP(X, titre = "", axes = None, numero = None):
     n = len(X)
     plt.figure(figsize=(8,8))
