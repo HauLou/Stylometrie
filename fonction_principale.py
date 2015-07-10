@@ -8,6 +8,7 @@ import pickle
 import vecteur_depuis_texte as v_texte
 import vecteur_depuis_liste_natures as v_natures
 import vecteur_depuis_foret as v_foret
+import kernels
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 
@@ -16,8 +17,8 @@ import matplotlib.pyplot as plt
 
 # A CORRIGER
 #auteurs = liste_dossiers('./auteurs/')
-# auteurs = ['dominicfifield','fiona-harvey','julianborger','kim-willsher','larryelliott']
-auteurs = ['larryelliott','dominicfifield']
+auteurs = ['dominicfifield','fiona-harvey','julianborger','kim-willsher','larryelliott']
+# auteurs = ['larryelliott','dominicfifield']
 nb_auteurs = len(auteurs)
 
 
@@ -61,10 +62,9 @@ def charge_fichier(chemin, binaire = True):
 
 
 
-
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = 40, poids = 1, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
+def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['sa'], poids = 1, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
     if type(nb_articles_par_auteur) == int:
         nb_articles_par_auteur = [nb_articles_par_auteur]*nb_auteurs
     
@@ -72,12 +72,14 @@ def fonction_principale(nb_articles_par_auteur = 40, poids = 1, tsne = True, acp
     X = []
     nb_fonctions = 0
     
+    textes_pris = []
     for auteur in range(len(auteurs)):
         i = 0
         nb_articles_pris = 0
         while nb_articles_pris < nb_articles_par_auteur[auteur]:
             texte = charge_texte(auteurs[auteur],i)
             if critere(texte):
+                textes_pris.append((auteurs[auteur],i))
                 ind_fonction = 0
                 natures = charge_liste_natures(auteurs[auteur],i)
                 foret = charge_foret(auteurs[auteur],i)
@@ -106,7 +108,18 @@ def fonction_principale(nb_articles_par_auteur = 40, poids = 1, tsne = True, acp
             i += 1
     X = np.array(X)
     
-    
+    G = {}
+    n = len(textes_pris)
+    ind_ker = 0
+    for ker in liste_kernels:
+        G[ker] = np.zeros((n,n))
+        for i in range(n):
+            print(ker,i)
+            foret1 = charge_foret(textes_pris[i][0],textes_pris[i][1])
+            for j in range(i+1):
+                foret2 = charge_foret(textes_pris[j][0],textes_pris[j][1])
+                G[ker][i,j] = G[ker][j,i] = eval('kernels.kernel_'+ker+'(foret1,foret2)')
+        ind_ker += 1
     
 
     if acp:
@@ -125,7 +138,7 @@ def fonction_principale(nb_articles_par_auteur = 40, poids = 1, tsne = True, acp
         X_kmeans = kmeans(X)
     
     trace_ACP(X_acp,nb_articles_par_auteur)
-    return X,tailles_vecteurs
+    return X,G,tailles_vecteurs
 
 
-X,t = fonction_principale()
+X,G,t = fonction_principale()

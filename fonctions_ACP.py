@@ -106,7 +106,7 @@ def ACP(X, n_components=None, kernel=kernel_eucl, centre = None, normalisee = Tr
 def couleur(i, nb_articles_par_auteur, couleurs):
     ind = 0
     nb_vus = nb_articles_par_auteur[0]
-    while nb_vus < i:
+    while not i < nb_vus:
         ind += 1
         nb_vus += nb_articles_par_auteur[ind]
         
