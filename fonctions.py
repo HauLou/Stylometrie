@@ -37,6 +37,13 @@ def charge_texte(auteur,i):
     f.close()
     return retour
 
+def charge_foret(auteur,i):
+    f = open('./forets/'+auteur+'/'+str(i)+'.txt','rb')
+    retour = pickle.load(f)
+    f.close()
+    return retour
+
+
 def charge_liste_natures(auteur,i):
     f = open('./listes_natures/'+auteur+'/'+str(i)+'.txt','rb')
     retour = pickle.load(f)

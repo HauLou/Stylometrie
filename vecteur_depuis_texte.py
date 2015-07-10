@@ -1,27 +1,3 @@
-
-Skip to content
-This repository
-
-    Pull requests
-    Issues
-    Gist
-
-    @HauLou
-
-2
-0
-
-    0
-
-HauLou/Stylometrie
-
-Stylometrie/vecteur_depuis_texte.py
-@MouZaHa MouZaHa 28 minutes ago ajout de fonctions vecteur_frequence
-
-2 contributors
-@MouZaHa
-@HauLou
-286 lines (238 sloc) 9.795 kB
 ## Librairies
 
 # from fonctions_ACP import *
@@ -209,7 +185,6 @@ def vecteur_frequence_longueur_mots(texte):
     nb_phrases = len(phrases)
     # Parcours des phrases
     for phrase in phrases:
-<<<<<<< HEAD
         mots_phrase = nltk.word_tokenize(phrase)
         taille = classification(mots_phrase)
 
@@ -220,6 +195,7 @@ def vecteur_frequence_longueur_mots(texte):
             X[taille] += 1
         nb_phrases= len(phrases)
         X = [t/nb_phrases for t in X]
+        return X;
 
 ## Fonction fréquence de trigrams
 
@@ -287,7 +263,7 @@ def estBigram(texte, bigrams):
 def vecteur_frequence_bigrammes_fin(texte):
     # Définition des données relatives au texte
     len_texte = len(texte)
-    texte = nltk.word.tokenize(texte)
+    texte = nltk.word_tokenize(texte)
     # Définition des bigrammes
     bigrams = ['th', 'he', 'in', 'en', 'nt', 're', 'er', 'an', 'ti', 'es', 'on', 'at', 'se', 'nd', 'or', 'ar', 'al', 'te', 'co', 'de', 'to', 'ra', 'et', 'ed', 'it', 'sa', 'em', 'ro']
     nb_bigrams = len(bigrams)
@@ -297,19 +273,8 @@ def vecteur_frequence_bigrammes_fin(texte):
     for mot in texte:
         if 2 < len(mot):
             estbig = estBigram(mot, bigrams)
-                if (estbig!=-1):
-                    X[numArt, estbig] += 1
+            if (estbig!=-1):
+                X[estbig] += 1
     X = [i/len_texte for i in X]
-=======
-        listeMots = nltk.word_tokenize(phrase)
-        taille = classification(listeMots)
-        X[taille] += 1
-    nb_phrases= len(phrases)
-    X = [t/nb_phrases for t in X]
->>>>>>> 2c27ca7a1a24d02af724814478eb9fa26d878c85
     return X;
-
-    Status API Training Shop Blog About Help 
-
-    © 2015 GitHub, Inc. Terms Privacy Security Contact 
 
