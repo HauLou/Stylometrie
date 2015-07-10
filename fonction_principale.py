@@ -64,7 +64,7 @@ def charge_fichier(chemin, binaire = True):
 
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['sa'], poids = 1, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
+def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['chemin'], poids = 1, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
     if type(nb_articles_par_auteur) == int:
         nb_articles_par_auteur = [nb_articles_par_auteur]*nb_auteurs
     
@@ -102,7 +102,7 @@ def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['sa'], poid
                             ind_fonction += 1
                             
 
-                X.append(v)
+                X.append(ligne)
                 nb_articles_pris += 1
                 print(auteur,nb_articles_pris,i)
             i += 1

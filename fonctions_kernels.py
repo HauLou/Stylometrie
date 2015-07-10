@@ -31,6 +31,27 @@ def liste_sous_arbres(arbre):
     liste_sous_arbres2(l,a)
     return l;
 
+
+def etiq(a): return a._label;
+
+def liste_sous_arbres3(arbre):
+    retour = [arbre]
+    ind = 0
+    while ind < len(retour):
+        for fiston in retour[ind]:
+            # if type(fiston) == nltk.tree.Tree:
+            retour.append(fiston)
+        ind += 1
+    retour = sorted(retour,key = etiq)
+    return retour
+
+def liste_sous_arbres5(arbre):
+    # a = nltk.tree.ParentedTree.convert(arbre)
+    retour = arbre.subtrees()
+    retour = sorted(retour,key = etiq)
+    return retour
+    
+
 # Retourne la liste des paires de noeuds (enfin de sous-arbres) de arbre1*arbre2 ayant la même étiquette
 def paires_noeuds(arbre1,arbre2):
     sort = False
@@ -120,14 +141,30 @@ def nb_noeuds(arbre):
             retour += nb_noeuds(fils)
     return retour;
 # Prend 2 arbres et calcule le nombre de sous-arbres communs :
+
+# def nb_sous_arbres(arbre1,arbre2):
+#     paires = paires_noeuds(arbre1,arbre2)
+#     retour = 0
+#     for paire in paires:
+#         if sont_égaux(paire[0],paire[1]) == 1:
+#             retour += 1
+#     return retour
+
+# def nb_sous_arbres(arbre1,arbre2):
+#     paires = paires_noeuds(arbre1,arbre2)
+#     retour = 0
+#     for paire in paires:
+#         if sont_égaux(paire[0],paire[1]) == 1:
+#             retour += 1
+#     return retour
+
 def nb_sous_arbres(arbre1,arbre2):
     paires = paires_noeuds(arbre1,arbre2)
     retour = 0
     for paire in paires:
-        if sont_égaux(paire[0],paire[1]) == 1:
+        if paire[0] == paire[1]:
             retour += 1
     return retour
-
 
 ## Pour les arbres pondérés
 

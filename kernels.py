@@ -9,3 +9,292 @@ def kernel_sa(l_arbres1,l_arbres2):
         for a2 in l_arbres2:
             retour += nb_sous_arbres(a1,a2)
     return retour;
+
+## Fonctions auxiliaires
+
+def isArbre(arbre):
+    retour = (type(arbre)==nltk.tree.Tree)
+    return retour;
+
+## Kernel 1 : Produit du nombre de fils par étage
+# Résultat : Médiocre
+# Nom: 'produit_nombre_fils_etage.pdf'
+
+def parcours(arbre1, arbre2):
+    retour = 0
+    indice = 0
+    taille1 = len(arbre1)
+    taille2 = len(arbre2)
+    while (indice < taille1 and indice < taille2):
+        retour += kernel_nb_fils(arbre1[indice], arbre2[indice])
+        indice += 1
+    return retour;
+
+def kernel_nb_fils(arbre1, arbre2):
+    retour = 0
+    if isArbre(arbre1) and isArbre(arbre2):
+        taille1 = len(arbre1)
+        taille2 = len(arbre2)
+        retour += taille1 * taille2
+        retour += parcours(arbre1, arbre2)
+    return retour;        
+
+def kernel_article1(liste1, liste2):
+    retour = 0
+    if liste1 != [] and liste2 != []:
+        for i in liste2:
+            retour += kernel_nb_fils(liste1[0], i)
+        retour += kernel_article1(liste1[1::], liste2)
+    return retour;
+    
+## Kernel 2 : Produit scalaire dirachien sur les différents étages
+# Résultat: Médiocre, même lorsque l'on ne fait plus un produit de dirach
+# Image : Non enregistrée, faut pas exagérer.
+
+def produit_etage(liste1, liste2):
+    retour = 0
+    for element in liste1:
+        retour += liste2.count(element)
+    norme = len(liste1)+len(liste2)
+    if norme != 0:
+        retour /= norme
+    return retour;
+
+def liste_etage(i, liste_arbre):
+    retour = []
+    indice = i
+    liste = liste_arbre
+    while indice != 0:
+        liste_aux = []
+        for arbre in liste:
+            if isArbre(arbre):
+                liste_aux += arbre[::]
+        liste = liste_aux
+        indice -= 1
+    for arbre in liste:
+        if isArbre(arbre):
+            retour.append(arbre._label)
+    return retour;
+
+def kernel_etage(arbre1, arbre2):
+    etage = 9
+    liste1 = liste_etage(etage, arbre1)
+    liste2 = liste_etage(etage, arbre2)
+    retour = produit_etage(liste1, liste2)
+    return retour;
+
+## Kernel 3 : Produit scalaire dirachien le long d'une branche
+# Résultat: Un peu mieux que l'aléatoire sur 50*3 articles. ~~ Séparation du rouge et du bleu
+# nom de l'image : "produit_selon_branche.pdf"
+
+def produit_branche(arbre1, arbre2):
+    retour = 0
+    parcours1 = arbre1
+    parcours2 = arbre2
+    while isArbre(parcours1) and isArbre(parcours2):
+        retour += int(parcours1._label==parcours2._label)
+        parcours1 = parcours1[0]
+        parcours2 = parcours2[0]
+    return retour;
+
+def produit_total(liste1, liste2):
+    retour = 0
+    if liste1 != []:
+        for arbre in liste2:
+            retour += produit_branche(arbre, liste1[0])
+        retour += produit_total(liste1[1::], liste2)
+    return retour;
+    
+## Kernel 3 : Nombre de fils par étage
+
+def kernel_nbfils_etage(liste_arbre1, liste_arbre2):
+    taille1 = 0
+    taille2 = 0
+    retour = 0
+    liste1 = liste_arbre1
+    liste2 = liste_arbre2
+    while liste1 != [] and liste2 != []:
+        retour += len(liste1)*len(liste2)
+        liste_aux = []
+        for fils in liste1:
+            if isArbre(fils):
+                liste_aux += fils[::]
+        liste1 = liste_aux
+        liste_aux = []
+        for fils in liste2:
+            if isArbre(fils):
+                liste_aux += fils[::]
+        liste2 = liste_aux
+    return retour;
+
+## Kernel 4: Kernel simple, Hauteur et largeur moyenne des arbres
+# Résultat : Pour bleu et rouge en reduit, ça peut aller.
+
+def hauteur_arbre(arbre):
+    retour = 0
+    liste = [arbre]
+    while liste!= []:
+        liste_aux = []
+        for element in liste:
+            if isArbre(element):
+                liste_aux += element[::]
+        liste = liste_aux
+        retour += 1
+    return retour;
+
+def hauteur_moyenne(foret):
+    retour = 0
+    n = len(foret)
+    for arbre in foret:
+        retour += hauteur_arbre(arbre)
+    retour /= n
+    return retour;
+    
+def largeur_arbre(arbre):
+    retour = 0
+    liste = [arbre]
+    while liste != []:
+        liste_aux = []
+        for element in liste:
+            if isArbre(element):
+                liste_aux += element[::]
+        liste = liste_aux
+        retour = max([retour, len(liste_aux)])
+    return retour;
+    
+def largeur_moyenne(foret):
+    retour = 0
+    n = len(foret)
+    for arbre in foret:
+        retour += largeur_arbre(arbre)
+    retour /= n
+    return retour;
+
+def kernel_simple(foret1, foret2):
+    retour = hauteur_moyenne(foret1)*hauteur_moyenne(foret2)
+    retour += largeur_moyenne(foret1)*largeur_moyenne(foret2)
+    return retour;
+
+## Kernel branche d' 'importance maximale'
+
+def nb_noeuds(arbre):
+    retour = 0
+    liste = [arbre]
+    while liste!=[]:
+        liste_aux = []
+        for element in liste:
+            if isArbre(element):
+                liste_aux += element[::]
+        retour += len(liste_aux)
+        liste = liste_aux
+    return retour;
+
+def branche_importante(arbre):
+    chemin = []
+    poids = []
+    arbre_bis = arbre
+    while isArbre(arbre_bis):
+        indice = 0
+        poids_max = 0
+        indice_max = 0
+        for fils in arbre_bis:
+            taille = nb_noeuds(fils)
+            if taille > poids_max:
+                indice_max = indice
+                poids_max = taille
+            indice += 1
+        chemin.append(indice_max)
+        poids.append(poids_max)
+        arbre_bis = arbre_bis[indice_max]
+    return [chemin, poids];
+    
+def kernel_chemin2(arbre1, arbre2):
+    branche1,p1 = branche_importante(arbre1)
+    branche2,p2 = branche_importante(arbre2)
+    taille1 = len(branche1)
+    taille2 = len(branche2)
+    retour = 0
+    indice = 0
+    while indice < taille1 and indice < taille2:
+        if indice > 0:
+            l1 = p1[indice]/p1[indice-1]
+            l2 = p2[indice]/p2[indice-1]
+        else:
+            l1 = l2 = 1
+        retour += l1*l2*int(branche1[indice] == branche2[indice])
+        indice += 1
+    return retour;
+
+def kernel_chemin(l1,l2):
+    a1 = nltk.tree.Tree('e',l1)
+    a2 = nltk.tree.Tree('e',l2)
+    return kernel_chemin2(a1,a2)
+
+
+## Centre de débuggage des kernels
+
+# auteur = '1'
+# article1 = 0
+# article2 = 1
+# 
+# for article1 in range(100):
+#     for article2 in range(100):
+#         
+#         chemin1 = './articles_arbres/'+str(auteur)+'/'+str(article1)+'.txt'
+#         fichier1 = open(chemin1, 'rb')
+#         texte1 = pickle.load(fichier1)
+#         
+#         chemin2 = './articles_arbres/'+str(auteur)+'/'+str(article2)+'.txt'
+#         fichier2 = open(chemin2, 'rb')
+#         texte2 = pickle.load(fichier2)
+#         
+#         prod = kernel_article1(texte1, texte2)
+#         print(prod)
+
+## Centre de test
+
+# auteurs = ['1', '2', '3']
+# nbArt = calcArt(auteurs) # tableau dans lequel est stocké le nombre d'articles par auteur
+# p = 26
+# n = sum(nbArt) # Nombre d'articles au total
+# couleurs = ['w', 'b', 'g', 'r', 'c', 'm', 'y', 'k']
+# 
+# ## Génération de la Matrice
+# 
+# liste_articles = []
+# numArt = 0
+# indice_article = 0
+# for auteur in range(1, len(auteurs)+1):
+#     for article in range(50):
+#         # Chargement des fichiers
+#         chemin = './articles_arbres/'+str(auteur)+'/'+str(article)+'.txt'
+#         fichier = open(chemin, 'rb')
+#         texte = pickle.load(fichier)
+#         # Remplissage de la liste
+#         liste_articles.append(texte[0])
+#         indice_article += 1
+#         print(indice_article)
+# 
+# X_acp = ACP(liste_articles, n_components = 5, kernel =kernel_chemin, normalisee = False)
+# 
+# # Dessin
+# 
+# def trouve_couleur(i):
+#     couleurs = ['r', 'g', 'b']
+#     return couleurs[i//50];
+# 
+# n = len(X_acp)
+# plt.figure(figsize=(8,8))
+# for i in range(n):
+#     plt.plot(X_acp[i,0], X_acp[i,1], '+', c=trouve_couleur(i)) 
+# #plt.axis(axes)
+# plt.show()
+# 
+# ## Centre de test 2
+# 
+# auteur = '3'
+# article = 0
+# 
+# chemin = './articles_arbres/'+str(auteur)+'/'+str(article)+'.txt'
+# fichier = open(chemin, 'rb')
+# texte = pickle.load(fichier)
