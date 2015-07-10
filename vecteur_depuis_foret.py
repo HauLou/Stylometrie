@@ -1,6 +1,7 @@
 ## Bibliothèques
 
 import nltk
+from fonctions import *
 
 ## Fréquence des couples d'arêtes :
 
@@ -22,14 +23,86 @@ def vecteur_frequence_couples_aretes(foret):
     for arbre in foret:
         l = liste_aretes(arbre)
         for c in l:
-            v[liste_ar.index(c)] += 1
+            if c in liste_ar:
+                v[liste_ar.index(c)] += 1
     s = sum(v)
     v = [nb/s for nb in v]
     return v;
-    # v = []
-    # for arbre in foret:
-    #     l = liste_aretes(arbre)
-    #     for c in l:
-    #         if not c in liste_ar:
-    #             v.append(c)
-    # return v;
+
+def taille(arbre): # Fonction qui calcule le nombre de feuilles d'un arbre
+    retour = 0
+    if isFeuille(arbre):
+        retour = 1
+    else:
+        for fils in arbre:
+            retour += taille(fils)
+    return retour;
+    
+def classe(arbre):
+    n = taille(arbre)
+    retour = n//3
+    if retour > 14:
+        retour = 14
+    return retour;
+    
+def repSentences(arbre): # Fonction qui calcule la répartition des sentences d'un arbre
+    retour = [0]*15
+    auxsent(arbre, retour)
+    return retour;
+    
+def auxsent(arbre, retour):
+    if isArbre(arbre):
+        if arbre._label=='S':
+            retour[classe(arbre)] += 1
+        for fils in arbre:
+            retour = auxsent(fils, retour)
+    return retour;
+    
+## Kernel 3 : 
+
+p = 5
+
+def nb_fils(arbre, tableau): # fonction qui calcule la fréquence de nombre de fils d'un arbre
+    if isArbre(arbre):
+        if len(arbre) < len(tableau):
+            tableau[len(arbre)] += 1
+            for fils in arbre:
+                tableau = nb_fils(fils, tableau)
+    return tableau; 
+def profondeur(arbre): # fonction qui calcule la profondeur d'un arbre
+    retour = 0
+    if isArbre(arbre):
+        for fils in arbre:
+            retour = max([retour, profondeur(fils)])
+        retour += 1
+    return retour;
+
+def nb_noeuds(arbre): # fonction qui calcule le nombre de noeuds d'un arbre
+    retour = 0
+    if isArbre(arbre):
+        for fils in arbre:
+            retour += nb_noeuds(fils)
+        retour += 1
+    return retour;
+    
+def tendance(arbre, tableau): # determine la position du sous-arbre de position maximal à chaque fois
+    if isArbre(arbre):
+        indice = 0
+        for fils in arbre:
+                if indice < len(tableau):
+                    tableau[indice] += nb_noeuds(fils)/nb_noeuds(arbre)
+                    indice += 1
+        for fils in arbre:
+            tableau = tendance(fils, tableau)
+    return tableau; 
+
+## Test Kernel 3
+
+def vecteur_struct_arbre(foret):
+    arbre = nltk.tree.Tree('ROOT', foret)
+    taille_foret = len(foret)
+    retour = [a/taille_foret for a in nb_fils(arbre, [0]*15)]
+    retour += [profondeur(arbre)-1]
+    retour += [nb_noeuds(arbre)/taille_foret]
+    retour += tendance(arbre, [0]*15)
+    return retour; 

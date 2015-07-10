@@ -1,4 +1,5 @@
 from nltk.corpus import PlaintextCorpusReader # Pour la définition du corpus de textes
+import nltk
 import numpy as np
 import pickle
 
@@ -49,6 +50,9 @@ def charge_liste_natures(auteur,i):
     retour = pickle.load(f)
     f.close()
     return retour
+
+def isArbre(arbre):
+    return (type(arbre) == nltk.tree.Tree)
 # listeMots = [',', '.', 'the', 'of', 'to', 'and', 'a', 'in', 'is', 'it', 'you', 'that', 'he', 'was', 'for', 'on', 'are', 'with', 'as', 'I', 'his', 'they', 'be', 'at', 'one', 'have', 'this'] # Liste de mots à changer eventuellement
 # auteurs = ['1','2','3']
 # nbArt = calcArt(auteurs) # tableau du nombre d'articles par auteur

@@ -64,7 +64,7 @@ def charge_fichier(chemin, binaire = True):
 
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['chemin'], poids = 1, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
+def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
     if type(nb_articles_par_auteur) == int:
         nb_articles_par_auteur = [nb_articles_par_auteur]*nb_auteurs
     
@@ -108,6 +108,15 @@ def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['chemin'], 
             i += 1
     X = np.array(X)
     
+    ind = 0
+    for fonc,t in tailles_vecteurs:
+        X_f = X[:,ind:(ind+t)]
+        G_f = X_f.dot(X_f.T)
+        f = open('./G/'+fonc+'.txt','wb')
+        pickle.dump(G_f,f)
+        f.close()
+        ind += t
+    
     G = {}
     n = len(textes_pris)
     ind_ker = 0
@@ -126,7 +135,7 @@ def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['chemin'], 
         X_acp = ACP(X)
     if tsne:
         modele = TSNE(n_components=2)
-        print(np.shape(X_acp))
+        print(np.shape(X))
         Y = modele.fit_transform(X_acp) 
         
         couleurs = ['b','r','g','y','k','m']
@@ -138,7 +147,7 @@ def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = ['chemin'], 
         X_kmeans = kmeans(X)
     
     trace_ACP(X_acp,nb_articles_par_auteur)
-    return X,G,tailles_vecteurs
+    return X,G,tailles_vecteurs,nb_fonctions
 
 
-X,G,t = fonction_principale()
+X,G,t,nb_fonctions = fonction_principale()
