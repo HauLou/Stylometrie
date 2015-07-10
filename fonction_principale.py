@@ -29,7 +29,7 @@ def accepte(article):
 
 def plus_1000_char(article):
     t = len(article)
-    return t >= 1000
+    return (t >= 1000 and (article.find('video') == -1))
 
 ## Fonction article to vecteur
 
@@ -64,7 +64,7 @@ def charge_fichier(chemin, binaire = True):
 
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
+def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids = {'vecteur_frequence_bigrammes_fin': 1,'vecteur_frequence_lettres_majuscule': 1, 'vecteur_frequence_premiere_lettre_majuscule': 1,'vecteur_frequence_bigrammes': 1, 'vecteur_frequence_premiere_lettre_minuscule': 1,'vecteur_frequence_longueur_mots': 1, 'vecteur_frequence_mots': 1, 'vecteur_frequence_lettres_minuscule': 1,'vecteur_frequence_voyelle': 1, 'vecteur_frequence_nature': 1, 'vecteur_frequence_ponctuation': 0,'vecteur_frequence_couples_aretes': 1, 'vecteur_struct_arbre': 0}, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
     if type(nb_articles_par_auteur) == int:
         nb_articles_par_auteur = [nb_articles_par_auteur]*nb_auteurs
     
@@ -95,10 +95,7 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
                             if auteur == 0 and nb_articles_pris == 0:
                                 tailles_vecteurs.append((fonction,len(v)))
                                 nb_fonctions += 1
-                            if type(poids) == int:
-                                ligne += [a*poids for a in v]
-                            else:
-                                ligne += [a*poids[ind_fonction] for a in v]
+                            ligne += v
                             ind_fonction += 1
                             
 
@@ -107,8 +104,10 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
                 print(auteur,nb_articles_pris,i)
             i += 1
     X = np.array(X)
-    
+    n = len(X)
     ind = 0
+    i = 0
+    Gram = np.zeros((n,n))
     for fonc,t in tailles_vecteurs:
         X_f = X[:,ind:(ind+t)]
         G_f = X_f.dot(X_f.T)
@@ -116,6 +115,11 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
         pickle.dump(G_f,f)
         f.close()
         ind += t
+        G_f = reduire(G_f)
+        G_f = centrer(G_f)
+        G_f = reduire(G_f)
+        Gram += G_f*poids[fonc]
+        i += 1
     
     G = {}
     n = len(textes_pris)
@@ -147,7 +151,8 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
         X_kmeans = kmeans(X)
     
     trace_ACP(X_acp,nb_articles_par_auteur)
-    return X,G,tailles_vecteurs,nb_fonctions
+    
+    return X,Gram
 
 
-X,G,t,nb_fonctions = fonction_principale()
+X,G = fonction_principale()
