@@ -49,3 +49,23 @@ for matrice_gram in liste_gram:
         #G = reduire(G)
         
         plt.imsave(matrice_gram.split('.')[0]+'.png',G,format='png')
+        
+##
+
+chemin = './Gram.txt'
+fichier = open(chemin, 'rb')
+G = pickle.load(fichier)
+fichier.close()
+
+#G = reduire(G)
+#G = centrer(G)
+#G = reduire(G)
+
+plt.imsave('Gram.png',G,format='png')
+
+## Essai boucle
+
+for i in range(100):
+    G = reduire(G)
+    G = centrer(G)
+    #imshow(G)
