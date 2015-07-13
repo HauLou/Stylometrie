@@ -11,6 +11,13 @@ import vecteur_depuis_foret as v_foret
 import kernels
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+import sklearn.cluster
+from sklearn import metrics
+from sklearn.cluster import KMeans
+from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import scale
+from sklearn.cluster import AffinityPropagation
 
 
 ## Variables Globales
@@ -64,7 +71,7 @@ def charge_fichier(chemin, binaire = True):
 
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids = {'vecteur_frequence_bigrammes_fin': 1,'vecteur_frequence_lettres_majuscule': 1, 'vecteur_frequence_premiere_lettre_majuscule': 1,'vecteur_frequence_bigrammes': 1, 'vecteur_frequence_premiere_lettre_minuscule': 1,'vecteur_frequence_longueur_mots': 1, 'vecteur_frequence_mots': 1, 'vecteur_frequence_lettres_minuscule': 1,'vecteur_frequence_voyelle': 1, 'vecteur_frequence_nature': 1, 'vecteur_frequence_ponctuation': 0,'vecteur_frequence_couples_aretes': 1, 'vecteur_struct_arbre': 0}, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
+def fonction_principale(nb_articles_par_auteur = 50,liste_kernels = [], poids = {'vecteur_frequence_bigrammes_fin': 1,'vecteur_frequence_lettres_majuscule': 1, 'vecteur_frequence_premiere_lettre_majuscule': 1,'vecteur_frequence_bigrammes': 1, 'vecteur_frequence_premiere_lettre_minuscule': 1,'vecteur_frequence_longueur_mots': 1, 'vecteur_frequence_mots': 1, 'vecteur_frequence_lettres_minuscule': 1,'vecteur_frequence_voyelle': 1, 'vecteur_frequence_nature': 1, 'vecteur_frequence_ponctuation': 0,'vecteur_frequence_couples_aretes': 1, 'vecteur_frequence_noeuds':0, 'vecteur_struct_arbre': 0}, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
     if type(nb_articles_par_auteur) == int:
         nb_articles_par_auteur = [nb_articles_par_auteur]*nb_auteurs
     
@@ -104,12 +111,15 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
                 print(auteur,nb_articles_pris,i)
             i += 1
     X = np.array(X)
+    
     n = len(X)
+    X_p = np.zeros((n,1))
     ind = 0
     i = 0
     Gram = np.zeros((n,n))
     for fonc,t in tailles_vecteurs:
         X_f = X[:,ind:(ind+t)]
+        X_p = np.concatenate((X_p,(X_f*poids[fonc])),axis = 1)
         G_f = X_f.dot(X_f.T)
         f = open('./G/'+fonc+'.txt','wb')
         pickle.dump(G_f,f)
@@ -122,6 +132,7 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
         i += 1
     
     G = {}
+    
     n = len(textes_pris)
     ind_ker = 0
     for ker in liste_kernels:
@@ -152,7 +163,80 @@ def fonction_principale(nb_articles_par_auteur = 100,liste_kernels = [], poids =
     
     trace_ACP(X_acp,nb_articles_par_auteur)
     
-    return X,Gram
+    return X_p,Gram
 
 
-X,G = fonction_principale()
+X,Gram = fonction_principale()
+
+
+##
+
+plt.figure()
+plt.ion()
+plt.jet()
+
+
+f = open('./G/vecteur_frequence_noeuds.txt','rb')
+G_f = pickle.load(f)
+f.close()
+
+G2 = reduire(G_f)
+G3 = centrer(G2)
+G4 = reduire(G3)
+G5 = centrer(G_f)
+G6 = reduire(G5)
+
+ax = plt.matshow(G4)
+##
+print('Classificiation')
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import SpectralClustering
+from sklearn.cluster.bicluster import SpectralBiclustering
+from sklearn.manifold import TSNE
+# C1 = sklearn.cluster.AgglomerativeClustering(n_clusters=5, affinity='precomputed')
+# 
+# R1 = C1.fit_predict(Gram)
+# 
+n = len(Gram)
+Di = np.reshape(np.diag(Gram),(n,1))
+M = Di.dot(np.ones((1,n)))
+
+D = M + M.T - 2*Gram
+
+C2 = AffinityPropagation(affinity='precomputed')
+C1 = KMeans(n_clusters = 5)
+C3 = AgglomerativeClustering(n_clusters=5, affinity='precomputed',linkage='average')
+C4 = SpectralClustering(n_clusters=5,affinity='precomputed')
+C5 = SpectralBiclustering(n_clusters=(5,5))
+
+R1 = C1.fit_predict(D)
+R2 = C2.fit_predict(D)
+R3 = C3.fit_predict(D)
+R4 = C4.fit_predict(Gram +11)
+R5 = C5.fit(D)
+
+print(R4)
+
+modèle = TSNE(n_components=2,metric='precomputed')
+Trans = modèle.fit_transform(D)
+
+G_ACP = ACP(Gram,precomputed=True)
+
+trace_ACP(G_ACP,[50]*5)
+##
+
+
+def reduit_dim(X, Distances, nouv_dim = 2):
+    n,p = np.shape(X)
+    if p > nouv_dim:
+        X_ACP = ACP(X,n_components=p+1)
+        print(X_ACP)
+        nouv_Distances = X_ACP.dot(X_ACP.T)
+        print(nouv_Distances)
+        Di = np.reshape(np.diag(nouv_Distances),(n,1))
+        M = Di.dot(np.ones((1,n)))
+        nouv_Distances = M + M.T - 2*nouv_Distances
+        print(nouv_Distances)
+    return (Distances-nouv_Distances)
+
+reduit_dim(np.array([[0,1],[1,0]]),np.array([[0,2],[2,0]]),1)
