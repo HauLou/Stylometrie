@@ -106,3 +106,18 @@ def vecteur_struct_arbre(foret):
     retour += [nb_noeuds(arbre)/taille_foret]
     retour += tendance(arbre, [0]*15)
     return retour; 
+
+## Fréquence des position des fils
+
+def vecteur_frequence_noeuds(foret, nb_fils_prem_etage = 3, nb_fils_sec_etage = 5):
+    listeNatures = ['LS', 'NN', 'VBZ', 'IN', 'DT', '.', 'WRB', 'NNS', 'NNP', 'JJ', 'JJR', 'VBP', 'MD', 'VB', 'PRP', 'VBD', 'VBN', ',', 'JJS', 'EX', 'CC', 'RB', 'TO', 'CD', 'VBG', ':', 'RP', 'WP', 'PRP$', '-NONE-', 'WDT', 'RBR', 'RBS', 'PDT', 'NNPS', '$', 'WP$', "''", 'POS', '``', '#', 'FW','UH','SYM']
+    nb_natures = len(listeNatures)
+    nb_arbres = len(foret)
+    v = [0]*(nb_fils_prem_etage*nb_fils_sec_etage*nb_natures)
+    for arbre in foret:
+        if not arbre._label == 'ROOT':
+            exit('etiq != Root dans vecteur_frequence_noeuds')
+        else:
+            fils = arbre[:]
+            t = len(
+    
