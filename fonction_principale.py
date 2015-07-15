@@ -71,7 +71,7 @@ def charge_fichier(chemin, binaire = True):
 
 ## Fonction principale
 
-def fonction_principale(nb_articles_par_auteur = 10,liste_kernels = [], poids = {'vecteur_frequence_bigrammes_fin': 1,'vecteur_frequence_lettres_majuscule': 1, 'vecteur_frequence_premiere_lettre_majuscule': 1,'vecteur_frequence_bigrammes': 1, 'vecteur_frequence_premiere_lettre_minuscule': 1,'vecteur_frequence_longueur_mots': 1, 'vecteur_frequence_mots': 1, 'vecteur_frequence_lettres_minuscule': 1,'vecteur_frequence_voyelle': 1, 'vecteur_frequence_nature': 1, 'vecteur_frequence_ponctuation': 0,'vecteur_frequence_couples_aretes': 1, 'vecteur_frequence_noeuds':0, 'vecteur_struct_arbre': 0}, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
+def fonction_principale(nb_articles_par_auteur = 50,liste_kernels = [], poids = {'vecteur_frequence_bigrammes_fin': 1,'vecteur_frequence_lettres_majuscule': 1, 'vecteur_frequence_premiere_lettre_majuscule': 1,'vecteur_frequence_bigrammes': 1, 'vecteur_frequence_premiere_lettre_minuscule': 1,'vecteur_frequence_longueur_mots': 1, 'vecteur_frequence_mots': 1, 'vecteur_frequence_lettres_minuscule': 1,'vecteur_frequence_voyelle': 1, 'vecteur_frequence_nature': 1, 'vecteur_frequence_ponctuation': 0,'vecteur_frequence_couples_aretes': 1, 'vecteur_frequence_noeuds':0, 'vecteur_struct_arbre': 0}, tsne = True, acp = True, kmeans = False, critere = plus_1000_char):
     if type(nb_articles_par_auteur) == int:
         nb_articles_par_auteur = [nb_articles_par_auteur]*nb_auteurs
     
@@ -222,7 +222,7 @@ Trans = modèle.fit_transform(D)
 
 G_ACP = ACP(Gram,precomputed=True)
 
-trace_ACP(G_ACP,[50]*5)
+trace_ACP(G_ACP,[10]*5)
 ##
 
 import propre_TSNE as pt
