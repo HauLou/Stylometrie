@@ -7,6 +7,7 @@ import copy
 import matplotlib.pyplot as plt
 import pickle
 import fonctions
+from mpl_toolkits.mplot3d import Axes3D
 
 ## Code des fonctions utiles
 
@@ -126,6 +127,21 @@ def trace_ACP(X,nb_articles_par_auteur, titre = "", axes = None, numero = None):
     plt.show()
     return;
 
+def trace_ACP3D(X,nb_articles_par_auteur, titre = "", axes = None, numero = None):
+
+    couleurs = ['b','r','g','y','k','m']
+    n = len(X)
+    fig = plt.figure(figsize=(8,8))
+    # ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
+    for i in range(n):
+        #if (findCol(i, nbArt, couleurs)!='g'):
+        ax.scatter(X[i,0], X[i,1],X[i,2],'+', c = couleur(i, nb_articles_par_auteur, couleurs)) 
+    plt.title(titre)
+    # if axes != None:
+    #     plt.axis(axes)
+    plt.show()
+    return;
 ## Centre de débuggage
 
 def kernel(X, Y):

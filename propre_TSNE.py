@@ -14,9 +14,33 @@ def carré(M):
 def cube(M):
     return M ** 3
 
+def exp_moins1(M):
+    return np.expm1(M)
+
+def racine(M):
+    return np.sqrt(M)
+
+def xxp1(M):
+    M2 = M ** 2
+    return (M + M2)
+
+def saut_a_4(M):
+    n = len(M)
+    ret = np.zeros((n,n))
+    for i in range(n):
+        for j in range(n):
+            if M[i,j] <= 3.2:
+                # ret[i,j] = M[i,j]/3
+                ret[i,j] = 0
+            else:
+                # ret[i,j] = 4*M[i,j]
+                # ret[i,j] = 3.5+M[i,j]
+                ret[i,j] = 3*M[i,j]
+    return ret
+
 
 # rapport doit être une fonction impaire croissante
-def reduit_dim(X, Distances = None,nouv_dim = 2, rapport = identité, frottements = 0.99, nb_iter = 50, seuil_var = 0.01, distance_souhaitée=carré):
+def reduit_dim(X, Distances = None,nouv_dim = 2, rapport = identité, frottements = 0.95, nb_iter = 50, seuil_var = 0.05, distance_souhaitée=saut_a_4):
     n,p = np.shape(X)
     
     restant = 1 - frottements
@@ -29,11 +53,13 @@ def reduit_dim(X, Distances = None,nouv_dim = 2, rapport = identité, frottement
         Ai = Di.dot(np.ones((1,n)))
         Distances = Ai + Ai.T - 2*Distances
         Distances = np.sqrt(Distances)
+        # return (Distances)
     X_ACP = X
     
     # # #
     # On veut ces distances :
     Distances = distance_souhaitée(Distances)
+    # return (Distances)
     # # #
     
     while p > nouv_dim:
@@ -91,11 +117,22 @@ A = np.array([
 [-1,-2,0]
 ])
 
-Dist = np.sqrt(D)
-r = reduit_dim(Gram/11,nouv_dim=2)
 
+r = reduit_dim(Gram/11,nouv_dim=3)
+# Dt = np.reshape(D,(n*n,1))
+# Dt = sorted(Dt)
+# Dt[int(n*n/5*2)]
+# Out[21]: array([ 3.65966034])
 ## 
+# G2 = Gram[np.ix_(list(range(0,100)) + list(range(200,250)),list(range(0,100)) + list(range(200,250)))]
+G2 = Gram[np.ix_(list(range(0,100)) ,list(range(0,100)))]
+r2 = reduit_dim(G2/11,nouv_dim=3)
 
-acp = ACP(Gram)
-trace_ACP(r,[50]*5)
-trace_ACP(acp,[50]*5)
+
+acp = ACP(G2/11, n_components = 3)
+trace_ACP3D(r2,[50]*3)
+trace_ACP3D(acp,[50]*3)
+## 
+acp = ACP(Gram/11, n_components = 3)
+trace_ACP3D(r,[50]*5)
+trace_ACP3D(acp,[50]*5)
