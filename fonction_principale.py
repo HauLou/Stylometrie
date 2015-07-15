@@ -168,7 +168,7 @@ def fonction_principale(nb_articles_par_auteur = 50,liste_kernels = [], poids = 
 ## 
 X,Gram = fonction_principale()
 
-
+  
 ##
 
 plt.figure()
