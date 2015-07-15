@@ -18,7 +18,7 @@ from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import scale
 from sklearn.cluster import AffinityPropagation
-from propre_TSNE import *
+# from propre_TSNE import *
 
 ## Variables Globales
 
@@ -165,7 +165,7 @@ def fonction_principale(nb_articles_par_auteur = 50,liste_kernels = [], poids = 
     
     return X_p,Gram
 
-
+## 
 X,Gram = fonction_principale()
 
 

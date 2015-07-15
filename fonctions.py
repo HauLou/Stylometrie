@@ -33,7 +33,7 @@ def secondParam(tab):
     return retour;
     
 def charge_texte(auteur,i):
-    f = open('./auteurs/'+auteur+'/'+str(i)+'.txt','r')
+    f = open('./auteurs/'+auteur+'/'+str(i)+'.txt','r', encoding="utf8")
     retour = f.read()
     f.close()
     return retour
